@@ -111,6 +111,7 @@ export default function Dashboard() {
 
   const c = stats?.classification;
   const inbox = stats?.inbox;
+  const recentActivity = Array.isArray(stats?.recentActivity) ? stats.recentActivity : [];
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -250,14 +251,14 @@ export default function Dashboard() {
           Activité récente
         </h3>
         <div className="space-y-0 divide-y divide-[var(--border-light)]">
-          {(stats?.recentActivity ?? []).length === 0 ? (
+          {recentActivity.length === 0 ? (
             <p className="py-8 text-center text-[var(--text-secondary)]">
               Aucune activité enregistrée — démarrez vos workflows n8n.
             </p>
           ) : (
-            stats.recentActivity.map((activity) => (
+            recentActivity.map((activity, index) => (
               <div
-                key={`${activity.at}-${index}`}
+                key={activity.at ? `${activity.at}-${index}` : `activity-${index}`}
                 className="flex gap-4 py-4 first:pt-0"
               >
                 <span
