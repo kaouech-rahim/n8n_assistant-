@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Compléments layout — variables dans styles/global.css */
+.app-root {
+  font-family: var(--font-sans);
+}
