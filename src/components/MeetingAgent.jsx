@@ -79,8 +79,8 @@ export default function MeetingAgent() {
               key={n.id}
               className={`rounded-lg border px-4 py-3 text-sm ${
                 n.type === 'success'
-                  ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-900 dark:text-emerald-100'
-                  : 'border-red-500/30 bg-red-500/10 text-red-900 dark:text-red-100'
+                  ? 'border-emerald-200 bg-emerald-50 text-emerald-900'
+                  : 'border-red-200 bg-red-50 text-red-900'
               }`}
             >
               {n.message}
@@ -153,7 +153,7 @@ export default function MeetingAgent() {
               <button
                 type="submit"
                 disabled={loading}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-emerald-600 px-4 py-3 text-sm font-semibold text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-teal-600 px-4 py-3 text-sm font-semibold text-white hover:bg-teal-700 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Video className="h-4 w-4" />}
                 Envoyer à n8n
@@ -165,7 +165,7 @@ export default function MeetingAgent() {
             <Card className="border-red-500/35 bg-red-500/5">
               <div className="flex gap-2">
                 <XCircle className="h-5 w-5 text-red-500" />
-                <p className="text-sm text-red-900 dark:text-red-100">{error}</p>
+                <p className="text-sm text-red-900">{error}</p>
               </div>
             </Card>
           ) : null}

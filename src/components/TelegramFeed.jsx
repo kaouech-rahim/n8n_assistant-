@@ -30,7 +30,7 @@ export default function TelegramFeed() {
         <Card className="mb-6 border-red-500/30 bg-red-500/5">
           <div className="flex items-start gap-3">
             <AlertCircle className="h-6 w-6 shrink-0 text-red-500" />
-            <p className="font-medium text-red-800 dark:text-red-200">{error}</p>
+            <p className="font-medium text-red-800">{error}</p>
           </div>
         </Card>
       ) : null}

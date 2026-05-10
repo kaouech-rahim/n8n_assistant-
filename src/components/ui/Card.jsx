@@ -1,11 +1,10 @@
 import React from 'react';
 
-/** Carte surface avec bordure — alignée sur les variables CSS globales */
+/** Surface carte — bordure slate légère, ombre neutre, pas d’animation intrusive */
 export function Card({ children, className = '', padded = true }) {
   return (
     <div
-      className={`rounded-xl border border-[var(--border-mid)] bg-[var(--bg-primary)] shadow-[var(--shadow-sm)] motion-safe:animate-[slideInUp_0.35s_ease-out_both] ${padded ? 'p-6' : ''} ${className}`}
-      style={{ animationDelay: '30ms' }}
+      className={`rounded-[var(--radius-lg)] border border-[var(--border-mid)] bg-[var(--bg-primary)] shadow-[var(--shadow-sm)] ${padded ? 'p-6' : ''} ${className}`}
     >
       {children}
     </div>

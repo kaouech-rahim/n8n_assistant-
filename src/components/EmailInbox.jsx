@@ -13,9 +13,9 @@ import {
 } from 'lucide-react';
 
 function badgeImportance(v) {
-  if (v === 'haute') return 'bg-red-500/15 text-red-700 ring-red-500/25 dark:text-red-300';
-  if (v === 'moyenne') return 'bg-amber-500/15 text-amber-800 ring-amber-500/25 dark:text-amber-200';
-  return 'bg-[var(--accent-soft)] text-[var(--accent-text)] ring-[var(--border-mid)]';
+  if (v === 'haute') return 'bg-red-50 text-red-800 ring-1 ring-red-200';
+  if (v === 'moyenne') return 'bg-amber-50 text-amber-900 ring-1 ring-amber-200';
+  return 'bg-slate-100 text-slate-700 ring-1 ring-slate-200';
 }
 
 export default function EmailInbox() {
@@ -77,7 +77,7 @@ export default function EmailInbox() {
           <div className="flex items-start gap-3">
             <AlertCircle className="h-6 w-6 shrink-0 text-red-500" />
             <div>
-              <p className="font-medium text-red-800 dark:text-red-200">{error}</p>
+              <p className="font-medium text-red-800">{error}</p>
               <button
                 type="button"
                 onClick={() => refetch()}
@@ -123,8 +123,8 @@ export default function EmailInbox() {
               <span
                 className={`rounded-full px-2 py-0.5 text-xs font-semibold ${
                   row.spam === 'oui'
-                    ? 'bg-red-500/15 text-red-700 dark:text-red-300'
-                    : 'bg-emerald-500/15 text-emerald-800 dark:text-emerald-200'
+                    ? 'bg-red-50 text-red-800 ring-1 ring-red-200'
+                    : 'bg-emerald-50 text-emerald-900 ring-1 ring-emerald-200'
                 }`}
               >
                 {row.spam === 'oui' ? (

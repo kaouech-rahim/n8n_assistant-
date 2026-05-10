@@ -5,9 +5,9 @@ import { Card } from './ui/Card.jsx';
 import { ScrollText, RefreshCw, AlertCircle } from 'lucide-react';
 
 const LEVEL_STYLES = {
-  info: 'text-blue-700 bg-blue-500/10 ring-blue-500/20 dark:text-blue-200',
-  warn: 'text-amber-800 bg-amber-500/10 ring-amber-500/20 dark:text-amber-200',
-  error: 'text-red-700 bg-red-500/10 ring-red-500/20 dark:text-red-200',
+  info: 'text-sky-900 bg-sky-50 ring-1 ring-sky-200',
+  warn: 'text-amber-900 bg-amber-50 ring-1 ring-amber-200',
+  error: 'text-red-800 bg-red-50 ring-1 ring-red-200',
 };
 
 export default function ActivityLogs() {
@@ -67,7 +67,7 @@ export default function ActivityLogs() {
 
       {error ? (
         <Card className="mb-6 border-red-500/30">
-          <div className="flex items-center gap-2 text-red-700 dark:text-red-300">
+          <div className="flex items-center gap-2 text-red-800">
             <AlertCircle className="h-5 w-5" />
             {error}
           </div>

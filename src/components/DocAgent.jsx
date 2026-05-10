@@ -203,7 +203,7 @@ export default function DocAgent() {
             <Card className="border-red-500/35 bg-red-500/5">
               <div className="flex gap-2">
                 <XCircle className="h-5 w-5 text-red-500" />
-                <p className="text-sm text-red-900 dark:text-red-100">{error}</p>
+                <p className="text-sm text-red-900">{error}</p>
               </div>
             </Card>
           ) : null}

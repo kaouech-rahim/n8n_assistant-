@@ -68,14 +68,14 @@ export default function SpamResults() {
           {results.map((result, index) => (
             <Card
               key={`${result.email_id}-${index}`}
-              className="transition hover:shadow-[var(--shadow-md)]"
+              className="transition-shadow hover:shadow-[var(--shadow-md)]"
             >
               <div className="mb-4 flex flex-wrap items-start justify-between gap-2">
                 <span
                   className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${
                     result.classification === 'spam'
-                      ? 'bg-red-500/15 text-red-800 ring-1 ring-red-500/25 dark:text-red-200'
-                      : 'bg-emerald-500/15 text-emerald-900 ring-1 ring-emerald-500/25 dark:text-emerald-100'
+                      ? 'bg-red-50 text-red-800 ring-1 ring-red-200'
+                      : 'bg-emerald-50 text-emerald-900 ring-1 ring-emerald-200'
                   }`}
                 >
                   {result.classification === 'spam' ? 'Spam' : 'Non-spam'}
@@ -105,7 +105,7 @@ export default function SpamResults() {
                 </div>
                 {result.contenu ? (
                   <details className="group mt-2">
-                    <summary className="cursor-pointer text-sm font-medium text-[var(--accent-text)]">
+                    <summary className="cursor-pointer text-sm font-medium text-teal-700 hover:text-teal-800">
                       Contenu complet
                     </summary>
                     <div className="mt-2 max-h-48 overflow-auto rounded-lg bg-[var(--bg-secondary)] p-3 text-[var(--text-primary)] whitespace-pre-wrap">

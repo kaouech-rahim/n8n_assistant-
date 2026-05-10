@@ -164,9 +164,9 @@ export default function MailAgent() {
               key={n.id}
               className={`flex items-center gap-3 rounded-lg border px-4 py-3 text-sm motion-safe:animate-[slideInRight_0.35s_ease-out_both] ${
                 n.type === 'success'
-                  ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-900 dark:text-emerald-100'
+                  ? 'border-emerald-200 bg-emerald-50 text-emerald-900'
                   : n.type === 'error'
-                    ? 'border-red-500/30 bg-red-500/10 text-red-900 dark:text-red-100'
+                    ? 'border-red-200 bg-red-50 text-red-900'
                     : 'border-[var(--border-mid)] bg-[var(--bg-secondary)] text-[var(--text-primary)]'
               }`}
             >
@@ -237,7 +237,7 @@ export default function MailAgent() {
                         <button
                           type="button"
                           onClick={() => handleDeleteDraft(d.id)}
-                          className="inline-flex items-center gap-1 text-xs font-medium text-red-600 hover:underline dark:text-red-400"
+                          className="inline-flex items-center gap-1 text-xs font-medium text-red-600 hover:underline"
                         >
                           <Trash2 className="h-3 w-3" />
                           Supprimer
@@ -361,8 +361,8 @@ export default function MailAgent() {
               <div className="flex gap-3">
                 <XCircle className="h-5 w-5 shrink-0 text-red-500" />
                 <div>
-                  <p className="font-semibold text-red-900 dark:text-red-100">Erreur</p>
-                  <p className="mt-1 text-sm text-red-800/90 dark:text-red-200">{error}</p>
+                  <p className="font-semibold text-red-900">Erreur</p>
+                  <p className="mt-1 text-sm text-red-800">{error}</p>
                 </div>
               </div>
             </Card>
@@ -373,7 +373,7 @@ export default function MailAgent() {
               <div className="flex gap-3">
                 <CheckCircle className="h-5 w-5 shrink-0 text-emerald-600" />
                 <div className="min-w-0 flex-1">
-                  <p className="font-semibold text-emerald-900 dark:text-emerald-100">Réponse n8n</p>
+                  <p className="font-semibold text-emerald-900">Réponse n8n</p>
                   <div className="mt-3">
                     <ResultPanel data={result} />
                   </div>

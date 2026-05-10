@@ -18,21 +18,21 @@ import {
 
 function StatTile({ label, value, hint, icon: Icon, tone = 'default' }) {
   const tones = {
-    default: 'from-[var(--accent-soft)] to-transparent',
-    danger: 'from-red-500/10 to-transparent',
-    success: 'from-emerald-500/10 to-transparent',
-    warn: 'from-amber-500/10 to-transparent',
+    default: 'from-slate-50 to-white',
+    danger: 'from-red-50/80 to-white',
+    success: 'from-emerald-50/80 to-white',
+    warn: 'from-amber-50/80 to-white',
   };
   return (
     <Card className={`relative overflow-hidden bg-gradient-to-br ${tones[tone] || tones.default}`}>
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="text-sm font-medium text-[var(--text-secondary)]">{label}</p>
-          <p className="mt-2 text-3xl font-semibold tracking-tight text-[var(--text-primary)]">{value}</p>
+          <p className="mt-2 text-3xl font-semibold tabular-nums tracking-tight text-[var(--text-primary)]">{value}</p>
           {hint ? <p className="mt-2 text-xs text-[var(--text-tertiary)]">{hint}</p> : null}
         </div>
-        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[var(--bg-primary)] shadow-[var(--shadow-sm)] ring-1 ring-[var(--border-light)]">
-          <Icon className="h-5 w-5 text-[var(--accent-text)]" aria-hidden />
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-slate-50 ring-1 ring-slate-200/80">
+          <Icon className="h-5 w-5 text-teal-700" aria-hidden />
         </span>
       </div>
     </Card>
@@ -51,7 +51,7 @@ function MiniBars({ chart, classification }) {
     { label: 'Spam (IA)', value: spam, className: 'bg-red-500/80' },
     { label: 'Non-spam (IA)', value: nonSpam, className: 'bg-emerald-500/80' },
     { label: 'Spam boîte IMAP', value: inboxSpam, className: 'bg-orange-500/75' },
-    { label: 'Inbox nettoyée', value: inboxClean, className: 'bg-[var(--accent)]/80' },
+    { label: 'Inbox nettoyée', value: inboxClean, className: 'bg-teal-600' },
   ];
 
   return (
@@ -67,7 +67,7 @@ function MiniBars({ chart, classification }) {
               <span>{row.label}</span>
               <span>{row.value}</span>
             </div>
-            <div className="h-2.5 overflow-hidden rounded-full bg-[var(--bg-tertiary)] ring-1 ring-[var(--border-light)]">
+            <div className="h-2 overflow-hidden rounded-full bg-slate-200">
               <div
                 className={`h-full rounded-full transition-all duration-700 ease-out ${row.className}`}
                 style={{ width: `${Math.min(100, (row.value / max) * 100)}%` }}
@@ -132,8 +132,8 @@ export default function Dashboard() {
       />
 
       {error ? (
-        <Card className="mb-6 border-red-500/30 bg-red-500/5">
-          <div className="flex items-center gap-2 text-red-800 dark:text-red-200">
+        <Card className="mb-6 border-red-200 bg-red-50">
+          <div className="flex items-center gap-2 text-red-800">
             <AlertCircle className="h-5 w-5 shrink-0" />
             <span>{error}</span>
           </div>
@@ -169,7 +169,7 @@ export default function Dashboard() {
       </div>
 
       {adminNotes.length > 0 ? (
-        <Card className="mt-8 border-amber-500/25 bg-amber-500/[0.06]">
+        <Card className="mt-8 border-l-4 border-l-amber-400 bg-[var(--bg-primary)]">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <h3 className="flex items-center gap-2 text-lg font-semibold text-[var(--text-primary)]">
               <Bell className="h-5 w-5 text-amber-600" />
@@ -246,7 +246,7 @@ export default function Dashboard() {
 
       <Card className="mt-8">
         <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-[var(--text-primary)]">
-          <Activity className="h-5 w-5 text-[var(--accent-text)]" />
+          <Activity className="h-5 w-5 text-teal-700" />
           Activité récente
         </h3>
         <div className="space-y-0 divide-y divide-[var(--border-light)]">
@@ -255,21 +255,20 @@ export default function Dashboard() {
               Aucune activité enregistrée — démarrez vos workflows n8n.
             </p>
           ) : (
-            stats.recentActivity.map((activity, index) => (
+            stats.recentActivity.map((activity) => (
               <div
                 key={`${activity.at}-${index}`}
-                className="flex gap-4 py-4 first:pt-0 motion-safe:animate-[slideInUp_0.35s_ease-out_both]"
-                style={{ animationDelay: `${index * 40}ms` }}
+                className="flex gap-4 py-4 first:pt-0"
               >
                 <span
                   className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${
                     activity.type === 'classification'
-                      ? 'bg-[var(--accent)]'
+                      ? 'bg-teal-600'
                       : activity.type === 'inbox'
-                        ? 'bg-emerald-500'
+                        ? 'bg-slate-600'
                         : activity.type === 'telegram'
-                          ? 'bg-sky-500'
-                          : 'bg-[var(--text-tertiary)]'
+                          ? 'bg-sky-600'
+                          : 'bg-slate-400'
                   }`}
                 />
                 <div className="min-w-0 flex-1">
