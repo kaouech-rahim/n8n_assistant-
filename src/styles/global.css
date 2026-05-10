@@ -1,6 +1,11 @@
 /* ============================================
-   n8n Assistant — Design system (sobre, cohérent)
-   Neutres slate + accent teal — pas de dégradés « gadget »
+   n8n Assistant — Design system (tokens CSS)
+   Où est le « design » dans le projet :
+   - Variables & typo : ce fichier (global.css)
+   - Layout (sidebar sombre, fond slate-50) : src/App.jsx
+   - Cartes & en-têtes de page : src/components/ui/Card.jsx, PageHeader.jsx
+   - Styles Tailwind (utilities) : src/App.css via @import "tailwindcss"
+   - Police & favicon : index.html
    ============================================ */
 
 *, *::before, *::after {

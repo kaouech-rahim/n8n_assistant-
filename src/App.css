@@ -1,8 +1,6 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Tailwind v4 — une seule entrée PostCSS valide */
+@import "tailwindcss";
 
-/* Compléments layout — variables dans styles/global.css */
 .app-root {
   font-family: var(--font-sans);
 }

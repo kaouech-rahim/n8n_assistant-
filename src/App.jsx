@@ -105,6 +105,11 @@ export default function App() {
         <footer className="border-t border-slate-200 bg-white px-4 py-3">
           <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-x-6 gap-y-1 text-center text-[11px] text-slate-500">
             <span>
+              UI dev{' '}
+              <code className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-slate-700">localhost:5173</code>
+            </span>
+            <span className="hidden sm:inline">·</span>
+            <span>
               API{' '}
               <code className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-slate-700">localhost:3001</code>
             </span>
