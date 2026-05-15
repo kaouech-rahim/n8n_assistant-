@@ -1,137 +1,183 @@
-/* ============================================
-   n8n Assistant — Design system (tokens CSS)
-   Où est le « design » dans le projet :
-   - Variables & typo : ce fichier (global.css)
-   - Layout (sidebar sombre, fond slate-50) : src/App.jsx
-   - Cartes & en-têtes de page : src/components/ui/Card.jsx, PageHeader.jsx
-   - Styles Tailwind (utilities) : src/App.css via @import "tailwindcss"
-   - Police & favicon : index.html
-   ============================================ */
+@import "tailwindcss";
 
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+@custom-variant dark (&:where(.dark, .dark *));
 
-:root {
-  /* Accent unique (actions, liens, focus) */
-  --accent: #0d9488;
-  --accent-hover: #0f7668;
-  --accent-soft: #ecfdf5;
-  --accent-text: #115e59;
-  --accent-ring: rgba(13, 148, 136, 0.35);
-
-  /* Surfaces — fond page gris neutre, cartes blanches */
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8fafc;
-  --bg-tertiary: #f1f5f9;
-  --bg-hover: #f1f5f9;
-
-  /* Texte */
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-tertiary: #94a3b8;
-  --text-muted: #cbd5e1;
-
-  /* Bordures — gris froid uniquement */
-  --border-light: #f1f5f9;
-  --border-mid: #e2e8f0;
-  --border-strong: #cbd5e1;
-
-  /* Sidebar (référence — layout principal dans App.jsx) */
-  --sidebar-bg: #0f172a;
-  --sidebar-border: #1e293b;
-  --sidebar-muted: #64748b;
-
-  /* Ombres neutres */
-  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
-  --shadow-md: 0 4px 16px rgba(15, 23, 42, 0.07);
-  --shadow-lg: 0 12px 40px rgba(15, 23, 42, 0.08);
-
-  --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
-  --radius-full: 9999px;
-
-  --sidebar-width: 260px;
-  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
-}
-
-html, body, #root {
-  height: 100%;
-  width: 100%;
-}
+*, *::before, *::after { box-sizing: border-box; }
 
 body {
-  font-family: var(--font-sans);
-  background: var(--bg-tertiary);
-  color: var(--text-primary);
-  line-height: 1.55;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Scrollbar discrète */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: var(--radius-full); }
-::-webkit-scrollbar-thumb:hover { background: var(--text-tertiary); }
-
-:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-button { cursor: pointer; font-family: inherit; }
-textarea, input, select { font-family: inherit; }
-
-/* Boutons réutilisables */
-.btn-primary {
-  display: inline-flex;
+/* ── Auth background ──────────────────────────────────────────── */
+.auth-bg {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0d0221 0%, #0f172a 35%, #1e1b4b 65%, #0d0221 100%);
+  position: relative;
+  overflow: hidden;
+  display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 0.625rem 1rem;
+}
+
+.auth-orb-1 {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(124,58,237,0.18) 0%, transparent 65%);
+  top: -150px;
+  right: -100px;
+  pointer-events: none;
+  animation: orbFloat 8s ease-in-out infinite;
+}
+
+.auth-orb-2 {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(79,70,229,0.14) 0%, transparent 65%);
+  bottom: -120px;
+  left: -80px;
+  pointer-events: none;
+  animation: orbFloat 10s ease-in-out infinite reverse;
+}
+
+.auth-orb-3 {
+  position: absolute;
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(167,139,250,0.10) 0%, transparent 65%);
+  top: 40%;
+  left: 30%;
+  pointer-events: none;
+  animation: orbFloat 12s ease-in-out infinite 2s;
+}
+
+@keyframes orbFloat {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50%       { transform: translateY(-30px) scale(1.05); }
+}
+
+/* ── Auth card ───────────────────────────────────────────────── */
+.auth-card {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 440px;
+  background: rgba(255,255,255,0.97);
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.08),
+    0 20px 60px rgba(0,0,0,0.35),
+    0 4px 16px rgba(0,0,0,0.2);
+  animation: cardIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(28px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);    }
+}
+
+/* ── Form inputs ─────────────────────────────────────────────── */
+.form-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
   font-size: 0.875rem;
-  font-weight: 600;
-  color: #fff;
-  background: var(--accent);
-  border: none;
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
-  transition: background 0.15s ease, box-shadow 0.15s ease;
+  color: #0f172a;
+  background: #f8fafc;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  outline: none;
+  font-family: inherit;
 }
-.btn-primary:hover:not(:disabled) {
-  background: var(--accent-hover);
+.form-input:focus {
+  border-color: #7c3aed;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(124,58,237,0.12);
 }
-.btn-primary:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
+.form-input::placeholder { color: #94a3b8; }
 
-.btn-secondary {
-  display: inline-flex;
+/* ── Buttons ─────────────────────────────────────────────────── */
+.btn-primary {
+  width: 100%;
+  padding: 0.8rem 1.5rem;
+  background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%);
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 4px 14px rgba(124,58,237,0.35);
+  letter-spacing: 0.01em;
+  font-family: inherit;
+}
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(124,58,237,0.45);
+}
+.btn-primary:active { transform: translateY(0); }
+
+/* ── Sidebar nav item ────────────────────────────────────────── */
+.nav-item {
+  display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.625rem 1rem;
+  gap: 0.75rem;
+  padding: 0.6rem 0.875rem;
+  border-radius: 10px;
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--text-primary);
-  background: var(--bg-primary);
-  border: 1px solid var(--border-mid);
-  border-radius: var(--radius-md);
-  transition: background 0.15s ease, border-color 0.15s ease;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  border: none;
+  background: transparent;
+  width: 100%;
+  text-align: left;
+  position: relative;
+  font-family: inherit;
 }
-.btn-secondary:hover:not(:disabled) {
-  background: var(--bg-hover);
-  border-color: var(--border-strong);
+.nav-item:hover:not(.active) {
+  background: rgba(255,255,255,0.05);
+  color: #e2e8f0;
+}
+.nav-item.active {
+  background: linear-gradient(135deg, rgba(124,58,237,0.22), rgba(79,70,229,0.16));
+  color: #ffffff;
+}
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 18%; bottom: 18%;
+  width: 3px;
+  background: linear-gradient(to bottom, #8b5cf6, #6366f1);
+  border-radius: 0 3px 3px 0;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+/* ── Dashboard scrollbar ─────────────────────────────────────── */
+.main-scroll { overflow-y: auto; }
+.main-scroll::-webkit-scrollbar { width: 5px; }
+.main-scroll::-webkit-scrollbar-track { background: transparent; }
+.main-scroll::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 99px;
 }
+
+/* ── Meeting / Doc HTML output ──────────────────────────────────── */
+.meeting-html { line-height: 1.75; }
+.meeting-html b { color: #0f172a; font-weight: 600; }
+.meeting-html i { color: #475569; }
+
+/* ── Page enter animation ────────────────────────────────────── */
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.page-enter { animation: pageIn 0.3s ease-out both; }

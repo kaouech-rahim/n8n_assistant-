@@ -1,0 +1,14 @@
+[
+  { "name": "Ahmed Ben Salem",    "email": "ahmed.bensalem@company.com",  "role": "Développeur Backend" },
+  { "name": "Sara Mejri",         "email": "sara.mejri@company.com",      "role": "Designer UX/UI" },
+  { "name": "Karim Trabelsi",     "email": "karim.trabelsi@company.com",  "role": "Chef de projet" },
+  { "name": "Nour Hamdi",         "email": "nour.hamdi@company.com",      "role": "Développeur Frontend" },
+  { "name": "Youssef Jebali",     "email": "youssef.jebali@company.com",  "role": "DevOps" },
+  { "name": "Ines Chaabane",      "email": "ines.chaabane@company.com",   "role": "Analyste Données" },
+  { "name": "Mehdi Khelifi",      "email": "mehdi.khelifi@company.com",   "role": "Développeur IA" },
+  { "name": "Sana Bouaziz",       "email": "sana.bouaziz@company.com",    "role": "QA Engineer" },
+  { "name": "Bilel Dridi",        "email": "bilel.dridi@company.com",     "role": "Architecte Logiciel" },
+  { "name": "Mariem Gharbi",      "email": "mariem.gharbi@company.com",   "role": "Product Owner" },
+  { "name": "Amine Sassi",        "email": "amine.sassi@company.com",     "role": "Développeur Mobile" },
+  { "name": "Fatma Romdhani",     "email": "fatma.romdhani@company.com",  "role": "Scrum Master" }
+]

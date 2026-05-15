@@ -1,0 +1,407 @@
+{
+  "name": "DOC Agent — Upload + Q&A",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "doc-upload",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [-1136, 320],
+      "id": "68815ce0-9d00-4ebf-8f75-69adab248a19",
+      "name": "📥 Webhook – Upload",
+      "webhookId": "9dd329c3-84f7-45d1-a441-20c805649b9b"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ success: true, message: 'Document reçu, traitement en cours...' }) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [-880, 320],
+      "id": "0abce4ae-f0b1-4a3b-8ac6-c5794e3e3706",
+      "name": "↩️ Respond – Upload"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 2 },
+                "conditions": [
+                  {
+                    "id": "cond-pdf",
+                    "leftValue": "={{ $binary.document.mimeType }}",
+                    "rightValue": "application/pdf",
+                    "operator": { "type": "string", "operation": "equals", "name": "filter.operator.equals" }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "PDF"
+            },
+            {
+              "conditions": {
+                "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 2 },
+                "conditions": [
+                  {
+                    "id": "cond-word",
+                    "leftValue": "={{ $binary.document.mimeType }}",
+                    "rightValue": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    "operator": { "type": "string", "operation": "equals", "name": "filter.operator.equals" }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Word"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b8928682-24bc-4cea-a9c7-fa8335eb47e5",
+      "name": "🔀 Switch – Type de fichier",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [-640, 320]
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.item;\nconst binaryData = item.binary || {};\n\nif (binaryData.document && binaryData.document.data) {\n  return [item];\n}\n\nconst altNames = ['data', 'file', 'upload', 'attachment', 'pdf', 'binary'];\nfor (const name of altNames) {\n  if (binaryData[name]) {\n    const newBinary = { document: { ...binaryData[name] } };\n    if (!newBinary.document.mimeType) newBinary.document.mimeType = 'application/pdf';\n    return [{ json: item.json, binary: newBinary }];\n  }\n}\n\nconst jsonData = item.json || {};\nconst base64Fields = ['document', 'file', 'data', 'pdf', 'content', 'fileData'];\nfor (const field of base64Fields) {\n  if (jsonData[field] && typeof jsonData[field] === 'string') {\n    let b64 = jsonData[field];\n    if (b64.includes(',')) b64 = b64.split(',')[1];\n    const buffer = Buffer.from(b64, 'base64');\n    const binaryDoc = await this.helpers.prepareBinaryData(buffer, jsonData.fileName || 'document.pdf', 'application/pdf');\n    return [{ json: item.json, binary: { document: binaryDoc } }];\n  }\n}\n\nthrow new Error('Aucune donnée PDF trouvée.');"
+      },
+      "id": "0f2d9a11-44d3-4cce-8331-b32442ee24b5",
+      "name": "🔄 Préparer binaire PDF",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-416, 160]
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "binaryPropertyName": "document",
+        "options": {}
+      },
+      "id": "b00fd866-8d13-4354-8f3d-9971deb36db4",
+      "name": "📄 Extraire Texte PDF",
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [-208, 160]
+    },
+    {
+      "parameters": {
+        "operation": "word"
+      },
+      "id": "9b522770-637d-4870-be7e-c3ed53b40b51",
+      "name": "📝 Extraire Texte Word",
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [-304, 480]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a1",
+              "name": "extracted_text",
+              "value": "={{ $json.text || $json.content || $json.data }}",
+              "type": "string"
+            },
+            {
+              "id": "a2",
+              "name": "session_id",
+              "value": "={{ $('📥 Webhook – Upload').item.json.session_id || 'default-session' }}",
+              "type": "string"
+            },
+            {
+              "id": "a3",
+              "name": "file_name",
+              "value": "={{ $('🔀 Switch – Type de fichier').item.binary?.document?.fileName || $('📥 Webhook – Upload').item.json.fileName || 'document' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c91a7f20-205a-454a-9569-04ef0df20680",
+      "name": "🔧 Set – Variables session",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [112, 320]
+    },
+    {
+      "parameters": {
+        "chunkSize": 500,
+        "chunkOverlap": 50,
+        "options": {}
+      },
+      "id": "4e7aeba9-005a-4c3f-9626-afe9d06e5731",
+      "name": "✂️ Text Splitter",
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [640, 608]
+    },
+    {
+      "parameters": {
+        "dataType": "text",
+        "options": {}
+      },
+      "id": "e2780530-cf0b-4f2b-950a-5e43346ff911",
+      "name": "📚 Document Loader",
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1,
+      "position": [512, 480]
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-embedding-001"
+      },
+      "id": "ff75f8f0-6c52-4051-a456-59698a1174ce",
+      "name": "✦ Gemini Embeddings – Insert",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [352, 480],
+      "credentials": {
+        "googlePalmApi": { "id": "U9EBdyhWaeMgWJ01", "name": "Google Gemini(PaLM) Api account" }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "memoryKey": "={{ 'doc_' + $('🔧 Set – Variables session').item.json.session_id }}",
+        "clearStore": true
+      },
+      "id": "6f711fec-0619-404b-9f32-2ec522e3c042",
+      "name": "🗄️ Vector Store – Insert",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "typeVersion": 1.1,
+      "position": [448, 320]
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": { "temperature": 0.3 }
+      },
+      "id": "8d6714b4-2be2-453c-9c74-ec80c7d93224",
+      "name": "🤖 Groq LLM – Résumé",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [1024, 480],
+      "credentials": {
+        "groqApi": { "id": "6cZqinuUS9Jj8tL3", "name": "Groq account 2" }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Tu es un assistant expert en analyse documentaire. Génère un résumé structuré en français du document suivant.\n\nNom du fichier : {{ $('🔧 Set – Variables session').item.json.file_name }}\n\nContenu :\n{{ $('🔧 Set – Variables session').item.json.extracted_text }}\n\nFournis :\n1. 📌 Titre et thème principal\n2. 📝 Résumé exécutif (3-5 phrases)\n3. 🔑 Points clés (liste)\n4. 📊 Conclusions principales\n5. ❓ Questions potentielles sur ce document"
+      },
+      "id": "22761ea9-ae1b-464f-9a65-f959c3cadb0c",
+      "name": "🤖 Agent – Génère Résumé",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [992, 320]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:3001/api/doc-summary",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [{ "name": "Content-Type", "value": "application/json" }]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"resume\": {{ JSON.stringify($json.text) }},\n  \"session_id\": \"{{ $('🔧 Set – Variables session').item.json.session_id }}\",\n  \"file_name\": \"{{ $('🔧 Set – Variables session').item.json.file_name }}\"\n}",
+        "options": {}
+      },
+      "id": "0a00c9bd-9d02-409c-99ff-3be4556cd2bd",
+      "name": "📤 HTTP – Envoyer Résumé",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [1328, 320]
+    },
+
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "doc-agent",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [-1136, 800],
+      "id": "a1b2c3d4-0000-0000-0000-000000000001",
+      "name": "📥 Webhook – Q&A"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "q1",
+              "name": "question",
+              "value": "={{ $json.question }}",
+              "type": "string"
+            },
+            {
+              "id": "q2",
+              "name": "session_id",
+              "value": "={{ $json.session_id || 'default-session' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "bf9756ba-cfea-4f76-ba95-c1b8075a6bdf",
+      "name": "🔧 Set – Variables Q&A",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [-880, 800]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('🔧 Set – Variables Q&A').item.json.question }}",
+        "options": {
+          "systemMessage": "Tu es un assistant intelligent spécialisé dans l'analyse documentaire.\nRéponds en français de manière claire et précise.\n\nPour toute question, utilise l'outil document_memory pour récupérer le contenu pertinent du document avant de répondre.\nSi la question porte sur un résumé, utilise document_memory avec la requête 'contenu principal' et génère un résumé structuré."
+        }
+      },
+      "id": "75851883-9f52-42bf-8b66-a722013fcabd",
+      "name": "🤖 Agent RAG – Répond Questions",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [-640, 800]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ success: true, answer: $json.output }) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [-400, 800],
+      "id": "a1b2c3d4-0000-0000-0000-000000000002",
+      "name": "↩️ Respond – Q&A"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [-656, 1008],
+      "id": "2775dc08-bf1a-4523-b42f-3d026e1f2dde",
+      "name": "🤖 Groq Chat Model – Q&A",
+      "credentials": {
+        "groqApi": { "id": "6cZqinuUS9Jj8tL3", "name": "Groq account 2" }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolName": "document_memory",
+        "toolDescription": "Recherche des informations dans le document uploadé par l'utilisateur. Utilise cet outil pour répondre aux questions sur le contenu du document.",
+        "memoryKey": "={{ 'doc_' + $('🔧 Set – Variables Q&A').item.json.session_id }}"
+      },
+      "id": "220e81ce-16e8-4582-b819-41e820f8cb78",
+      "name": "🗄️ Vector Store – Retrieve",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "typeVersion": 1.1,
+      "position": [-480, 992]
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-embedding-001"
+      },
+      "id": "8dbb1f7e-c35a-4e81-87ea-3f7f0c31d79b",
+      "name": "✦ Gemini Embeddings – Retrieve",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [-416, 1152],
+      "credentials": {
+        "googlePalmApi": { "id": "U9EBdyhWaeMgWJ01", "name": "Google Gemini(PaLM) Api account" }
+      }
+    }
+  ],
+  "connections": {
+    "📥 Webhook – Upload": {
+      "main": [[{ "node": "↩️ Respond – Upload", "type": "main", "index": 0 }]]
+    },
+    "↩️ Respond – Upload": {
+      "main": [[{ "node": "🔀 Switch – Type de fichier", "type": "main", "index": 0 }]]
+    },
+    "🔀 Switch – Type de fichier": {
+      "main": [
+        [{ "node": "🔄 Préparer binaire PDF", "type": "main", "index": 0 }],
+        [{ "node": "📝 Extraire Texte Word",   "type": "main", "index": 0 }]
+      ]
+    },
+    "🔄 Préparer binaire PDF": {
+      "main": [[{ "node": "📄 Extraire Texte PDF", "type": "main", "index": 0 }]]
+    },
+    "📄 Extraire Texte PDF": {
+      "main": [[{ "node": "🔧 Set – Variables session", "type": "main", "index": 0 }]]
+    },
+    "📝 Extraire Texte Word": {
+      "main": [[{ "node": "🔧 Set – Variables session", "type": "main", "index": 0 }]]
+    },
+    "🔧 Set – Variables session": {
+      "main": [[{ "node": "🗄️ Vector Store – Insert", "type": "main", "index": 0 }]]
+    },
+    "✂️ Text Splitter": {
+      "ai_textSplitter": [[{ "node": "📚 Document Loader", "type": "ai_textSplitter", "index": 0 }]]
+    },
+    "📚 Document Loader": {
+      "ai_document": [[{ "node": "🗄️ Vector Store – Insert", "type": "ai_document", "index": 0 }]]
+    },
+    "✦ Gemini Embeddings – Insert": {
+      "ai_embedding": [[{ "node": "🗄️ Vector Store – Insert", "type": "ai_embedding", "index": 0 }]]
+    },
+    "🗄️ Vector Store – Insert": {
+      "main": [[{ "node": "🤖 Agent – Génère Résumé", "type": "main", "index": 0 }]]
+    },
+    "🤖 Groq LLM – Résumé": {
+      "ai_languageModel": [[{ "node": "🤖 Agent – Génère Résumé", "type": "ai_languageModel", "index": 0 }]]
+    },
+    "🤖 Agent – Génère Résumé": {
+      "main": [[{ "node": "📤 HTTP – Envoyer Résumé", "type": "main", "index": 0 }]]
+    },
+
+    "📥 Webhook – Q&A": {
+      "main": [[{ "node": "🔧 Set – Variables Q&A", "type": "main", "index": 0 }]]
+    },
+    "🔧 Set – Variables Q&A": {
+      "main": [[{ "node": "🤖 Agent RAG – Répond Questions", "type": "main", "index": 0 }]]
+    },
+    "🤖 Agent RAG – Répond Questions": {
+      "main": [[{ "node": "↩️ Respond – Q&A", "type": "main", "index": 0 }]]
+    },
+    "🤖 Groq Chat Model – Q&A": {
+      "ai_languageModel": [[{ "node": "🤖 Agent RAG – Répond Questions", "type": "ai_languageModel", "index": 0 }]]
+    },
+    "🗄️ Vector Store – Retrieve": {
+      "ai_tool": [[{ "node": "🤖 Agent RAG – Répond Questions", "type": "ai_tool", "index": 0 }]]
+    },
+    "✦ Gemini Embeddings – Retrieve": {
+      "ai_embedding": [[{ "node": "🗄️ Vector Store – Retrieve", "type": "ai_embedding", "index": 0 }]]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5f2993db217083c4c9a21dc56284331d144583f23ddae1e1744cec66affc03ad"
+  }
+}

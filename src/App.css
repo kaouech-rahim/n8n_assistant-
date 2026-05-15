@@ -1,6 +1,0 @@
-/* Tailwind v4 — une seule entrée PostCSS valide */
-@import "tailwindcss";
-
-.app-root {
-  font-family: var(--font-sans);
-}

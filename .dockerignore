@@ -1,0 +1,22 @@
+node_modules
+dist
+.git
+.github
+.env
+*.local
+.DS_Store
+Thumbs.db
+
+# SQLite files
+app.db
+app.db-shm
+app.db-wal
+
+# Uploaded files
+public/avatars
+
+# Dev/test artifacts
+npm-debug.log*
+*.pdf
+make_pdf.cjs
+rapport_ia_2024.pdf

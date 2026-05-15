@@ -4,3 +4,11 @@ dist/
 *.local
 .DS_Store
 Thumbs.db
+
+# SQLite
+app.db
+app.db-shm
+app.db-wal
+
+# Uploads
+public/avatars/
