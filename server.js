@@ -1174,7 +1174,7 @@ app.get('/api/health', (_req, res) => {
 // Serves the React build; must be AFTER all /api routes
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(join(__dir, 'dist')));
-  app.get('*', (_req, res) => res.sendFile(join(__dir, 'dist', 'index.html')));
+  app.get('/{*path}', (_req, res) => res.sendFile(join(__dir, 'dist', 'index.html')));
 }
 
 // ─── Démarrage ─────────────────────────────────────────────────────────────────
