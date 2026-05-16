@@ -5,11 +5,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.frontend
-    image: n8n-assistant-frontend:latest
     container_name: n8n-assistant-frontend
     restart: unless-stopped
     ports:
-      - "80:80"       # accès depuis le navigateur → http://localhost
+      - "80:80"
     depends_on:
       backend:
         condition: service_healthy
@@ -22,22 +21,19 @@ services:
       context: .
       dockerfile: Dockerfile
       target: runner
-    image: n8n-assistant-backend:latest
     container_name: n8n-assistant-backend
     restart: unless-stopped
     ports:
-      - "3001:3001"   # exposé pour que n8n puisse poster ses webhooks
+      - "3001:3001"
     volumes:
-      - db_data:/app/data           # SQLite persistant
-      - uploads:/app/public/avatars # avatars persistants
+      - db_data:/app/data
+      - uploads:/app/public/avatars
     environment:
       - NODE_ENV=production
       - PORT=3001
       - DB_PATH=/app/data/app.db
-      - N8N_URL=${N8N_URL:-http://host.docker.internal:5678}
-      - N8N_WEBHOOK_BASE=${N8N_WEBHOOK_BASE:-http://host.docker.internal:5678/webhook}
-    env_file:
-      - .env
+      - N8N_URL=http://host.docker.internal:5678
+      - N8N_WEBHOOK_BASE=http://host.docker.internal:5678/webhook
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3001/api/health"]
       interval: 30s
@@ -47,25 +43,9 @@ services:
     networks:
       - assistant_net
 
-  # ── n8n (optionnel — décommente si tu veux n8n dans le même stack) ────────────
-  # n8n:
-  #   image: n8nio/n8n:latest
-  #   container_name: n8n
-  #   restart: unless-stopped
-  #   ports:
-  #     - "5678:5678"
-  #   volumes:
-  #     - n8n_data:/home/node/.n8n
-  #   environment:
-  #     - N8N_HOST=0.0.0.0
-  #     - WEBHOOK_URL=http://backend:3001
-  #   networks:
-  #     - assistant_net
-
 volumes:
   db_data:
   uploads:
-  # n8n_data:
 
 networks:
   assistant_net:
