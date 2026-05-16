@@ -3,7 +3,7 @@
 Interface web fullstack pour l'automatisation intelligente via [n8n](https://n8n.io/), avec des agents IA spécialisés pour la gestion des emails, réunions, documents, Telegram et bien plus.
 
 ---
-
+####
 ## Aperçu
 
 n8n Assistant est une application React + Express qui agit comme un **orchestrateur centralisé** entre l'utilisateur et des workflows n8n. Elle expose 8 agents IA via une interface moderne, chacun connecté à des services externes (Gmail, Google Calendar, Google Drive, Telegram, etc.) via webhooks.
